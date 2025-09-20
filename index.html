@@ -182,7 +182,7 @@
   <!-- Login -->
   <div class="login-card" id="loginCard">
     <h2>Member Login</h2>
-    <input type="text" id="email" placeholder="Email"><br>
+    <input type="text" id="username" placeholder="username"><br>
     <input type="password" id="password" placeholder="Password"><br>
     <button onclick="doLogin()">Login</button>
     <p id="msg"></p>
@@ -227,12 +227,12 @@
   }
 
   async function doLogin() {
-    const email = document.getElementById("email").value.trim();
+    const username = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value.trim();
     showLoader(true);
 
     try {
-      const res = await callApi('login', { email, password });
+      const res = await callApi('login', { username, password });
       showLoader(false);
 
       if (res.success) {
