@@ -2,22 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Sign Up for Library Access</title>
+  <title>Library Portal Sign Up</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary-color: #4A90E2;
-      --secondary-color: #50B498;
-      --background-light: #F0F4F8;
-      --background-dark: #E3F2FD;
+      --primary-color: #007bff;
+      --secondary-color: #28a745;
       --text-color: #333;
+      --bg-light: #f8f9fa;
+      --bg-dark: #e9ecef;
       --card-bg: #FFFFFF;
-      --shadow-light: rgba(0, 0, 0, 0.08);
-      --shadow-heavy: rgba(0, 0, 0, 0.15);
+      --shadow-light: rgba(0, 0, 0, 0.1);
+      --shadow-heavy: rgba(0, 0, 0, 0.2);
     }
     body {
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, var(--background-light), var(--background-dark));
+      background: linear-gradient(135deg, var(--bg-light), var(--bg-dark));
       margin: 0;
       padding: 0;
       display: flex;
@@ -28,7 +28,6 @@
       color: var(--text-color);
     }
     .form-card {
-      margin-top: 50px;
       background: var(--card-bg);
       padding: 40px;
       border-radius: 20px;
@@ -71,7 +70,7 @@
     input:focus {
       outline: none;
       border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
     }
     button {
       width: 100%;
@@ -79,7 +78,7 @@
       margin-top: 25px;
       border-radius: 10px;
       border: none;
-      background: var(--primary-color);
+      background: var(--secondary-color);
       color: white;
       font-weight: 600;
       font-size: 18px;
@@ -90,7 +89,6 @@
     button:hover {
       transform: translateY(-3px);
       box-shadow: 0 8px 20px var(--shadow-heavy);
-      background: #3474eb;
     }
     #msg {
       margin-top: 20px;
@@ -106,32 +104,31 @@
 <body>
 
   <div class="form-card">
-    <h2>Request Library Access</h2>
-    <p style="font-size:14px; color:#888;">Fill out the form to request an account. Once approved, you'll receive an email with your login details.</p>
-    <form action="https://formsubmit.co/tahambombay@gmail.com" method="POST">
+    <h2>Library Account Request</h2>
+    <p style="font-size:14px; color:#888;">Fill out the form to request an account. An admin will review your request and create your account.</p>
     <div class="input-group">
       <label for="name">Full Name</label>
-      <input type="text" id="name" placeholder="Your full name">
+      <input type="text" id="name" placeholder="Your full name" required>
     </div>
     <div class="input-group">
       <label for="itsNumber">ITS Number</label>
-      <input type="text" id="itsNumber" placeholder="Your ITS Number">
+      <input type="text" id="itsNumber" placeholder="Your ITS Number" required>
     </div>
     <div class="input-group">
       <label for="email">Email</label>
-      <input type="email" id="email" placeholder="Your email address">
+      <input type="email" id="email" placeholder="Your email address" required>
     </div>
     <div class="input-group">
       <label for="phone">Phone Number</label>
-      <input type="tel" id="phone" placeholder="Your phone number">
+      <input type="tel" id="phone" placeholder="Your phone number" required>
     </div>
     <button onclick="submitRequest()">Submit Request</button>
-    </form>
     <p id="msg"></p>
   </div>
 
 <script>
-  const API_URL = 'https://script.google.com/macros/s/AKfycbxSilgsP57EeKo1gA9WfSGP45AZ4Aq6xaLJxwsVyoO2Sp1rF29soOsoN_UM7kv6iP4FEA/exec';
+  // **REPLACE THIS WITH YOUR DEPLOYED API URL**
+  const API_URL = 'https://script.google.com/macros/s/AKfycbzSp8cRZNNAXKnmbCDR7Gv_270hZfT9XP-m8E5DhL2Q9c7ZOAxA4KEYHTxmzl-KnpAPxg/exec';
 
   async function submitRequest() {
     const name = document.getElementById("name").value.trim();
