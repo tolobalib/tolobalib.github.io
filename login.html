@@ -268,9 +268,10 @@
         const addedDate = b.addedDate ? new Date(b.addedDate) : null;
         const isNew = addedDate && ((today - addedDate)/(1000*60*60*24)) <= NEW_DAYS;
 
-        if (b.reservedBy === memberIDGlobal) {
-          reservedHtml.push(`${b.title} by ${b.author}`);
-        } else if (b.status === "Available") {
+        if (String(b.reservedBy).trim() === String(memberIDGlobal).trim()) {
+    reservedHtml.push(`${b.title} by ${b.author}`);
+}
+ else if (b.status === "Available") {
           bookHtml += `
             <div class="bookCard ${isNew ? 'new' : ''}">
               <img src="${b.cover || 'https://via.placeholder.com/220x280?text=Book+Cover'}" alt="Book Cover">
