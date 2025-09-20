@@ -173,25 +173,21 @@
 </head>
 <body>
 
-  <!-- Header -->
   <header>
     <img src="https://tkmshareqah.com/assets/images/image12.png?v=10037da3" alt="Logo">
     <h1>Library Portal</h1>
   </header>
 
-  <!-- Login -->
   <div class="login-card" id="loginCard">
     <h2>Member Login</h2>
-    <input type="text" id="username" placeholder="username"><br>
+    <input type="text" id="itsNumber" placeholder="ITS Number"><br>
     <input type="password" id="password" placeholder="Password"><br>
     <button onclick="doLogin()">Login</button>
     <p id="msg"></p>
   </div>
 
-  <!-- Loader -->
   <div id="loaderOverlay"><div class="spinner"></div></div>
 
-  <!-- Dashboard -->
   <div id="dashboard">
     <h3>Welcome, <span id="memberName"></span></h3>
     
@@ -205,7 +201,7 @@
 <script>
   let memberIDGlobal = null;
   // REPLACE THIS WITH YOUR DEPLOYED API URL
-  const API_URL = 'https://script.google.com/macros/s/AKfycbwrHR9rudBDZVxL4LsB5Z-3NAeKXHAh1VqaDNx0s6lpHPZFw4006d9EsyEVoX2mEswkoQ/exec'; 
+  const API_URL = 'https://script.google.com/macros/s/AKfycbzSp8cRZNNAXKnmbCDR7Gv_270hZfT9XP-m8E5DhL2Q9c7ZOAxA4KEYHTxmzl-KnpAPxg/exec'; 
 
   function showLoader(show) {
     document.getElementById("loaderOverlay").style.display = show ? "flex" : "none";
@@ -227,12 +223,12 @@
   }
 
   async function doLogin() {
-    const username = document.getElementById("username").value.trim();
+    const itsNumber = document.getElementById("itsNumber").value.trim();
     const password = document.getElementById("password").value.trim();
     showLoader(true);
 
     try {
-      const res = await callApi('login', { username, password });
+      const res = await callApi('login', { itsNumber: itsNumber, password });
       showLoader(false);
 
       if (res.success) {
