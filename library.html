@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <base target="_top">
+  <title>Library Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #e3f2fd, #ffffff);
+      margin: 0; padding: 0;
+      display: flex; flex-direction: column; align-items: center;
+      color: #333;
+    }
+    header {
+      width: 100%;
+      background: #007bff;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    header img {
+      height: 50px;
+      margin-right: 15px;
+    }
+    header h1 {
+      font-size: 22px;
+      font-weight: 600;
+    }
+    /* Login Card */
+    .login-card {
+      margin-top: 50px;
+      background: rgba(255,255,255,0.9);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
+      text-align: center;
+      width: 320px;
+      transition: transform 0.3s;
+    }
+    .login-card:hover { transform: translateY(-5px); }
+    input {
+      padding: 12px;
+      margin: 8px 0;
+      width: 90%;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+    button {
+      padding: 12px 20px;
+      margin-top: 12px;
+      border-radius: 8px;
+      border: none;
+      background: #007bff;
+      color: white;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover { background: #0056b3; }
+    #msg { margin-top: 10px; color: red; }
+
+    /* Dashboard */
+    #dashboard {
+      display: none;
+      width: 95%; max-width: 1200px;
+      margin-top: 30px;
+      text-align: center;
+    }
+    h3, h4 { margin: 15px; }
+
+    /* Book Section */
+    #bookSection {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .bookCard {
+      background: #fff;
+      border-radius: 12px;
+      padding: 15px;
+      margin: 12px;
+      width: 220px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      transition: transform 0.25s, box-shadow 0.25s;
+      text-align: left;
+    }
+    .bookCard:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+    .bookCard img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      background: #f0f0f0;
+    }
+    .bookCard b {
+      font-size: 16px;
+      display: block;
+      margin-bottom: 5px;
+    }
+    .bookCard .author {
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 8px;
+    }
+    .bookCard.new {
+      border: 2px solid #28a745;
+    }
+    .bookCard button {
+      width: 100%;
+    }
+
+    /* Reserved Books */
+    .reservedList {
+      margin-top: 20px;
+      list-style: none;
+      padding: 0;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+    }
+    .reservedList li {
+      background: #f8f9fa;
+      margin: 6px 0;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .reservedList li::before {
+      content: "📖";
+      margin-right: 10px;
+    }
+
+    /* Loader Overlay */
+    #loaderOverlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(255,255,255,0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      display: none;
+    }
+    .spinner {
+      border: 6px solid #e0e0e0;
+      border-top: 6px solid #007bff;
+      border-radius: 50%;
+      width: 60px; height: 60px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { 
+      0% { transform: rotate(0deg);} 
+      100% { transform: rotate(360deg);} 
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <img src="https://tkmshareqah.com/assets/images/image12.png?v=10037da3" alt="Logo">
+    <h1>Library Portal</h1>
+  </header>
+
+  <!-- Login -->
+  <div class="login-card" id="loginCard">
+    <h2>Member Login</h2>
+    <input type="text" id="email" placeholder="Email"><br>
+    <input type="password" id="password" placeholder="Password"><br>
+    <button onclick="doLogin()">Login</button>
+    <p id="msg"></p>
+  </div>
+
+  <!-- Loader -->
+  <div id="loaderOverlay"><div class="spinner"></div></div>
+
+  <!-- Dashboard -->
+  <div id="dashboard">
+    <h3>Welcome, <span id="memberName"></span></h3>
+    
+    <h4>Available Books</h4>
+    <div id="bookSection"></div>
+    
+    <h4>Your Reserved Books</h4>
+    <ul id="reservedBooks" class="reservedList"></ul>
+  </div>
+
+<script>
+  let memberIDGlobal = null;
+  // REPLACE THIS WITH YOUR DEPLOYED API URL
+  const API_URL = 'https://script.google.com/macros/s/AKfycbxMuMfINWdsSMra3dm6bTcrYNO96OGS_9WSwQ3cLOArRxBiphKnJXonHEdhI3VZsDvMHg/exec'; 
+
+  function showLoader(show) {
+    document.getElementById("loaderOverlay").style.display = show ? "flex" : "none";
+  }
+
+  // Generic function to make API calls
+  async function callApi(action, params = {}) {
+    const formData = new FormData();
+    formData.append('action', action);
+    for (const key in params) {
+      formData.append(key, params[key]);
+    }
+
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      body: formData,
+    });
+    return await response.json();
+  }
+
+  async function doLogin() {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    showLoader(true);
+
+    try {
+      const res = await callApi('login', { email, password });
+      showLoader(false);
+
+      if (res.success) {
+        document.getElementById("loginCard").style.display = "none";
+        document.getElementById("memberName").innerText = res.name;
+        document.getElementById("dashboard").style.display = "block";
+        memberIDGlobal = res.memberID;
+        loadBooks();
+      } else {
+        document.getElementById("msg").innerHTML = res.message;
+      }
+    } catch (error) {
+      showLoader(false);
+      document.getElementById("msg").innerHTML = 'An error occurred. Please try again later.';
+      console.error('Login error:', error);
+    }
+  }
+
+  async function loadBooks() {
+    showLoader(true);
+    try {
+      const res = await callApi('getAvailableBooks');
+      showLoader(false);
+      const books = res.data;
+
+      let bookHtml = "";
+      const reservedHtml = [];
+      const today = new Date();
+      const NEW_DAYS = 7;
+
+      books.forEach(b => {
+        const addedDate = b.addedDate ? new Date(b.addedDate) : null;
+        const isNew = addedDate && ((today - addedDate)/(1000*60*60*24)) <= NEW_DAYS;
+
+        if (b.reservedBy === memberIDGlobal) {
+          reservedHtml.push(`${b.title} by ${b.author}`);
+        } else if (b.status === "Available") {
+          bookHtml += `
+            <div class="bookCard ${isNew ? 'new' : ''}">
+              <img src="${b.cover || 'https://via.placeholder.com/220x280?text=Book+Cover'}" alt="Book Cover">
+              <b>${b.title}</b>
+              <div class="author">by ${b.author}</div>
+              ${isNew ? '<span style="color:green;"><b>New!</b></span><br>' : ''}
+              <button onclick="reserveBook('${b.id}')">Reserve</button>
+            </div>`;
+        }
+      });
+
+      document.getElementById("bookSection").innerHTML = bookHtml || "<p>No books available</p>";
+      document.getElementById("reservedBooks").innerHTML = reservedHtml.length ? reservedHtml.map(r => `<li>${r}</li>`).join('') : "<li>No reserved books</li>";
+    } catch (error) {
+      showLoader(false);
+      alert('Failed to load books. Please try again.');
+      console.error('Load books error:', error);
+    }
+  }
+
+  async function reserveBook(bookID) {
+    showLoader(true);
+    try {
+      const res = await callApi('reserveBook', { bookID, memberID: memberIDGlobal });
+      showLoader(false);
+      alert(res.message);
+      if (res.success) {
+        loadBooks();
+      }
+    } catch (error) {
+      showLoader(false);
+      alert('Failed to reserve book. Please try again.');
+      console.error('Reserve book error:', error);
+    }
+  }
+</script>
+
+</body>
+</html>
